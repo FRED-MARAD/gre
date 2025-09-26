@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html>
 <head>
     <title>mObywatel</title>
     <meta charset="UTF-8">
@@ -11,195 +13,199 @@
     <meta name="mobile-web-app-capable" content="yes">
     <style>
         .circle-buttons {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 24px;
-    }
-    .circle-button {
-      background-color: #2c2c2c;
-      border-radius: 50%;
-      width: 72px;
-      height: 72px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 12px;
-      text-align: center;
-      border: 1px solid #444;
-    }
-    .circle-button span {
-      margin-top: 6px;
-    }
+            display: flex;
+            justify-content: space-around;
+            margin-top: 24px;
+        }
+        .circle-button {
+            background-color: #2c2c2c;
+            border-radius: 50%;
+            width: 72px;
+            height: 72px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            text-align: center;
+            border: 1px solid #444;
+        }
+        .circle-button span {
+            margin-top: 6px;
+        }
 
-.box_value, .box_value1{
-    font-size: 1rem;
-    font-weight: 500;
-    color: #1f2125;
-    margin: 0;
-    padding: 0;
+        .box_value, .box_value1 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #1f2125;
+            margin: 0;
+            padding: 0;
+        }
 
-}
+        .services_grid {
+            display: flex;
+            justify-content: flex-start;
+            flex-wrap: nowrap;
+            gap: 5px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 5px;
+            overflow-x: auto;
+            max-width: auto;
+            float: left;
+            padding-bottom: 0px;
+        }
 
-.services_grid {
-    display: flex;
-    justify-content: flex-start; /* lub space-between */
-    flex-wrap: nowrap;
-    gap: 5px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 5px;
-    overflow-x: auto; /* POZWALA przewijać poziomo na małych ekranach */
-    max-width: auto;
-    float: left;
-    padding-bottom: 0px;
-}
+        .service_box {
+            flex: 1 1 20%;
+            min-width: 0px;
+            max-width: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            padding-bottom: 0px;
+        }
 
+        .service_box_icon {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            border-radius: 20px;
+            padding: 10px;
+            background-color: white;
+            margin: 0px;
+        }
 
-.service_box {
-    flex: 1 1 20%;
-    min-width: 0px;
-    max-width: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 15px;
-    border-radius: 10px;
-    text-align: center;
-    transition: transform 0.3s ease;
-    padding-bottom: 0px;
-}
+        .service_box_name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1f2125;
+            line-height: 1.2;
+            min-height: 3em;
+            padding-bottom: 0px;
+        }
 
-.service_box_icon {
-    width: 30px;
-    height: 30px;
-    object-fit: contain;
-    margin-bottom: 10px;
-    border-radius: 20px;
-    padding: 10px;
-    background-color: white;
-    margin: 0px;
-}
+        .confirm_box {
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
 
+        .other_grid {
+            padding-top: auto;
+        }
 
-.service_box_name {
-    font-size: 12px;
-    font-weight: 600;
-    color: #1f2125;
-    line-height: 1.2;
-    min-height: 3em; /* zapewnia równe wysokości tekstu */
-    padding-bottom: 0px;
-}
+        /* Holographic Effect Styles */
+        .holographic-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            border-radius: 8px;
+            overflow: hidden;
+            background: linear-gradient(45deg, 
+                hsl(280, 100%, 70%), 
+                hsl(200, 100%, 60%), 
+                hsl(320, 80%, 65%), 
+                hsl(60, 100%, 70%));
+            box-shadow: 0 4px 20px rgba(255, 0, 100, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-.confirm_box{
-    margin-bottom: 20px;
-    margin-top: 20px;
-}
+        .holographic-container:hover {
+            box-shadow: 0 8px 32px rgba(255, 0, 100, 0.5);
+            transform: scale(1.05);
+        }
 
-.other_grid{
-    padding-top: auto;
-}
+        .holographic-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center center;
+            backface-visibility: hidden;
+        }
 
-/* Holographic Eagle Effect Styles */
-.holographic-eagle-container {
-    position: relative;
-    width: 60px;
-    height: 60px;
-    perspective: 1000px;
-    transform-style: preserve-3d;
-    cursor: pointer;
-    border-radius: 8px;
-    overflow: hidden;
-    background: linear-gradient(45deg, 
-        hsl(280, 100%, 70%), 
-        hsl(200, 100%, 60%), 
-        hsl(320, 80%, 65%), 
-        hsl(60, 100%, 70%));
-    box-shadow: 0 4px 20px rgba(255, 0, 100, 0.3);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+        .holographic-bg {
+            background-image: url('assets/my-holographic-bg.png');
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+            opacity: 0.6;
+            animation: holographic-rotate 8s linear infinite;
+        }
 
-.holographic-eagle-container:hover {
-    box-shadow: 0 8px 32px rgba(255, 0, 100, 0.5);
-    transform: scale(1.05);
-}
+        .eagle-layer-2 {
+            background-image: url('assets/my-eagle-layer-2.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 2;
+            opacity: 0.7;
+            filter: blur(0.5px);
+        }
 
-.holographic-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    transform-origin: center center;
-    backface-visibility: hidden;
-}
+        .eagle-layer-1 {
+            background-image: url('assets/my-eagle-layer-1.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 3;
+            filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.3));
+        }
 
-.holographic-bg {
-    background-image: url('assets/holographic-bg.png');
-    background-size: cover;
-    background-position: center;
-    z-index: 1;
-    opacity: 0.6;
-    animation: holographic-rotate 8s linear infinite;
-}
+        .holographic-effect {
+            background: linear-gradient(45deg, 
+                rgba(255, 0, 150, 0.3), 
+                rgba(0, 255, 255, 0.3), 
+                rgba(255, 100, 0, 0.3), 
+                rgba(150, 0, 255, 0.3));
+            z-index: 4;
+            opacity: 0.4;
+            mix-blend-mode: overlay;
+            animation: holographic-shimmer 3s ease-in-out infinite;
+        }
 
-.eagle-layer-2 {
-    background-image: url('assets/eagle-layer-2.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    z-index: 2;
-    opacity: 0.7;
-    filter: blur(0.5px);
-}
+        .holographic-container:hover .holographic-effect {
+            opacity: 0.8;
+        }
 
-.eagle-layer-1 {
-    background-image: url('assets/eagle-layer-1.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    z-index: 3;
-    filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.3));
-}
+        @keyframes holographic-shimmer {
+            0%, 100% {
+                opacity: 0.4;
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.02) rotate(1deg);
+            }
+        }
 
-.holographic-effect {
-    background: linear-gradient(45deg, 
-        rgba(255, 0, 150, 0.3), 
-        rgba(0, 255, 255, 0.3), 
-        rgba(255, 100, 0, 0.3), 
-        rgba(150, 0, 255, 0.3));
-    z-index: 4;
-    opacity: 0.4;
-    mix-blend-mode: overlay;
-    animation: holographic-shimmer 3s ease-in-out infinite;
-}
+        @keyframes holographic-rotate {
+            0% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(90deg) scale(1.05); }
+            50% { transform: rotate(180deg) scale(1); }
+            75% { transform: rotate(270deg) scale(1.05); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
 
-.holographic-eagle-container:hover .holographic-effect {
-    opacity: 0.8;
-}
-
-@keyframes holographic-shimmer {
-    0%, 100% {
-        opacity: 0.4;
-        transform: scale(1) rotate(0deg);
-    }
-    50% {
-        opacity: 0.8;
-        transform: scale(1.02) rotate(1deg);
-    }
-}
-
-@keyframes holographic-rotate {
-    0% { transform: rotate(0deg) scale(1); }
-    25% { transform: rotate(90deg) scale(1.05); }
-    50% { transform: rotate(180deg) scale(1); }
-    75% { transform: rotate(270deg) scale(1.05); }
-    100% { transform: rotate(360deg) scale(1); }
-}
-
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .element {
+            animation: fadeIn 150ms ease-in;
+        }
     </style>
 </head>
 <body>
@@ -239,13 +245,10 @@
     <p class="time_text" id="time"></p>
     <div class="id_image_data">
         <img draggable="false" class="id_image" src="images/XSZFxrl.png">
-        <div class="inset">
-
-        </div>
+        <div class="inset"></div>
         <div class="id_own_image" style="background-image: url('https://i.imgur.com/7vHo48p.jpg');"></div>
         <img draggable="false" src="images/gzot1Pt.gif" class="flag_video">
-        <!-- Holographic Eagle Effect - replacing R5yccCK.gif -->
-        <div class="holographic-eagle-container eagle_video" id="holographicEagle">
+        <div class="holographic-container eagle_video" id="holographic">
             <div class="holographic-layer holographic-bg"></div>
             <div class="holographic-layer eagle-layer-2"></div>
             <div class="holographic-layer eagle-layer-1"></div>
@@ -302,37 +305,30 @@
     </div>
     
     <div class="other_grid" style="margin-top: 0px;">
-        <!-- Pierwszy bottom_holder z tabelką z danymi dokumentu -->
         <div class="bottom_holder" style="height: auto">
-            
-                <!-- Seria i numer -->
-                <div class="confirm_box" style="border: none;">
-                    <p class="box_top">Seria i numer</p>
-                    <b><p class="box_value" id="seria_numer" style="font-size: 25px;"></p></b>
-                    <button class="main_button">Kopiuj</button>
-                </div>
-                <!-- Organ wydający -->
-                <div class="confirm_box">
-                    <p class="box_top">Termin ważności</p>
-                    <b><p class="box_value" id="waznosc" style="font-size: 22px;"></p></b>
-                </div>
-                <!-- Termin ważności -->
-                <div class="confirm_box">
-                    <p class="box_top">Data wydania</p>
-                    <b><p class="box_value" id="wydany" style="font-size: 22px;"></p></b>
-                </div>
-                <div class="confirm_box">
-                    <p class="box_top">Imię ojca</p>
-                    <b><p class="box_value" id="fatherName" style="font-size: 22px;"></p></b>
-                </div>
-                <div class="confirm_box">
-                    <p class="box_top">Imię matki</p>
-                    <b><p class="box_value" id="motherName" style="font-size: 22px;"></p></b>
-                </div>
+            <div class="confirm_box" style="border: none;">
+                <p class="box_top">Seria i numer</p>
+                <b><p class="box_value" id="seria_numer" style="font-size: 25px;"></p></b>
+                <button class="main_button">Kopiuj</button>
+            </div>
+            <div class="confirm_box">
+                <p class="box_top">Termin ważności</p>
+                <b><p class="box_value" id="waznosc" style="font-size: 22px;"></p></b>
+            </div>
+            <div class="confirm_box">
+                <p class="box_top">Data wydania</p>
+                <b><p class="box_value" id="wydany" style="font-size: 22px;"></p></b>
+            </div>
+            <div class="confirm_box">
+                <p class="box_top">Imię ojca</p>
+                <b><p class="box_value" id="fatherName" style="font-size: 22px;"></p></b>
+            </div>
+            <div class="confirm_box">
+                <p class="box_top">Imię matki</p>
+                <b><p class="box_value" id="motherName" style="font-size: 22px;"></p></b>
+            </div>
         </div>
         
-    
-        <!-- Drugi bottom_holder (rozwijany) -->
         <div class="bottom_holder info_holder" style="font-size: 20px;">
             <div class="bottom_grid">
                 <p class="bottom_text" style="color: #1f2125; margin-left: 0px;">Twoje dodatkowe dane</p>
@@ -374,7 +370,6 @@
             </div>
         </div>
     
-        <!-- Trzeci bottom_holder z przyciskiem "Aktualizuj" -->
         <div class="bottom_holder" style="height: 90px; margin-bottom: 120px;">
             <div class="bottom_update">
                 <div class="bottom_update_grid">
@@ -393,16 +388,16 @@
     <script>
         // Holographic Gyroscope Effect
         document.addEventListener('DOMContentLoaded', function() {
-            const holographicEagle = document.getElementById('holographicEagle');
-            if (!holographicEagle) return;
+            const holographicContainer = document.getElementById('holographic');
+            if (!holographicContainer) return;
             
-            const layers = holographicEagle.querySelectorAll('.holographic-layer');
+            const layers = holographicContainer.querySelectorAll('.holographic-layer');
             let mousePosition = { x: 0, y: 0 };
             let isHovered = false;
 
             // Desktop mouse interaction
             function handleMouseMove(e) {
-                const rect = holographicEagle.getBoundingClientRect();
+                const rect = holographicContainer.getBoundingClientRect();
                 const centerX = rect.left + rect.width / 2;
                 const centerY = rect.top + rect.height / 2;
                 
@@ -430,10 +425,10 @@
 
             // Update layer transformations
             function updateLayers() {
-                const bgLayer = holographicEagle.querySelector('.holographic-bg');
-                const layer2 = holographicEagle.querySelector('.eagle-layer-2');
-                const layer1 = holographicEagle.querySelector('.eagle-layer-1');
-                const effect = holographicEagle.querySelector('.holographic-effect');
+                const bgLayer = holographicContainer.querySelector('.holographic-bg');
+                const layer2 = holographicContainer.querySelector('.eagle-layer-2');
+                const layer1 = holographicContainer.querySelector('.eagle-layer-1');
+                const effect = holographicContainer.querySelector('.holographic-effect');
 
                 if (bgLayer) {
                     bgLayer.style.transform = `perspective(1000px) rotateX(${mousePosition.y * 0.5}deg) rotateY(${mousePosition.x * 0.5}deg) scale(${isHovered ? 1.1 : 1})`;
@@ -453,12 +448,12 @@
             }
 
             // Event listeners
-            holographicEagle.addEventListener('mouseenter', function() {
+            holographicContainer.addEventListener('mouseenter', function() {
                 isHovered = true;
                 updateLayers();
             });
 
-            holographicEagle.addEventListener('mouseleave', function() {
+            holographicContainer.addEventListener('mouseleave', function() {
                 isHovered = false;
                 mousePosition = { x: 0, y: 0 };
                 updateLayers();
@@ -469,9 +464,8 @@
 
             // Device motion for mobile
             if (typeof DeviceMotionEvent !== 'undefined') {
-                // Request permission for iOS 13+
                 if (typeof DeviceMotionEvent.requestPermission === 'function') {
-                    holographicEagle.addEventListener('click', function() {
+                    holographicContainer.addEventListener('click', function() {
                         DeviceMotionEvent.requestPermission()
                             .then(function(response) {
                                 if (response === 'granted') {
@@ -483,7 +477,6 @@
                             });
                     });
                 } else {
-                    // Non-iOS devices
                     window.addEventListener('devicemotion', handleDeviceMotion);
                 }
             }
@@ -492,5 +485,5 @@
             updateLayers();
         });
     </script>
-    
 </body>
+</html>
