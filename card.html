@@ -102,6 +102,104 @@
     padding-top: auto;
 }
 
+/* Holographic Eagle Effect Styles */
+.holographic-eagle-container {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    background: linear-gradient(45deg, 
+        hsl(280, 100%, 70%), 
+        hsl(200, 100%, 60%), 
+        hsl(320, 80%, 65%), 
+        hsl(60, 100%, 70%));
+    box-shadow: 0 4px 20px rgba(255, 0, 100, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.holographic-eagle-container:hover {
+    box-shadow: 0 8px 32px rgba(255, 0, 100, 0.5);
+    transform: scale(1.05);
+}
+
+.holographic-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center center;
+    backface-visibility: hidden;
+}
+
+.holographic-bg {
+    background-image: url('assets/holographic-bg.png');
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    opacity: 0.6;
+    animation: holographic-rotate 8s linear infinite;
+}
+
+.eagle-layer-2 {
+    background-image: url('assets/eagle-layer-2.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 2;
+    opacity: 0.7;
+    filter: blur(0.5px);
+}
+
+.eagle-layer-1 {
+    background-image: url('assets/eagle-layer-1.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 3;
+    filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.3));
+}
+
+.holographic-effect {
+    background: linear-gradient(45deg, 
+        rgba(255, 0, 150, 0.3), 
+        rgba(0, 255, 255, 0.3), 
+        rgba(255, 100, 0, 0.3), 
+        rgba(150, 0, 255, 0.3));
+    z-index: 4;
+    opacity: 0.4;
+    mix-blend-mode: overlay;
+    animation: holographic-shimmer 3s ease-in-out infinite;
+}
+
+.holographic-eagle-container:hover .holographic-effect {
+    opacity: 0.8;
+}
+
+@keyframes holographic-shimmer {
+    0%, 100% {
+        opacity: 0.4;
+        transform: scale(1) rotate(0deg);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.02) rotate(1deg);
+    }
+}
+
+@keyframes holographic-rotate {
+    0% { transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(90deg) scale(1.05); }
+    50% { transform: rotate(180deg) scale(1); }
+    75% { transform: rotate(270deg) scale(1.05); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
     </style>
 </head>
 <body>
@@ -146,7 +244,13 @@
         </div>
         <div class="id_own_image" style="background-image: url('https://i.imgur.com/7vHo48p.jpg');"></div>
         <img draggable="false" src="images/gzot1Pt.gif" class="flag_video">
-        <img draggable="false" src="images/R5yccCK.gif" class="eagle_video">
+        <!-- Holographic Eagle Effect - replacing R5yccCK.gif -->
+        <div class="holographic-eagle-container eagle_video" id="holographicEagle">
+            <div class="holographic-layer holographic-bg"></div>
+            <div class="holographic-layer eagle-layer-2"></div>
+            <div class="holographic-layer eagle-layer-1"></div>
+            <div class="holographic-layer holographic-effect"></div>
+        </div>
         <p class="eagle_text">Rzeczpospolita<br>Polska</p>
         <div class="id_data_grid">
             <div class="data_holder">
@@ -287,10 +391,106 @@
     <script src="assets/manifest.js"></script>
 
     <script>
-       
+        // Holographic Gyroscope Effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const holographicEagle = document.getElementById('holographicEagle');
+            if (!holographicEagle) return;
+            
+            const layers = holographicEagle.querySelectorAll('.holographic-layer');
+            let mousePosition = { x: 0, y: 0 };
+            let isHovered = false;
 
+            // Desktop mouse interaction
+            function handleMouseMove(e) {
+                const rect = holographicEagle.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                const deltaX = (e.clientX - centerX) / rect.width;
+                const deltaY = (e.clientY - centerY) / rect.height;
+                
+                mousePosition.x = deltaX * 20;
+                mousePosition.y = deltaY * 20;
+                
+                updateLayers();
+            }
 
-        
+            // Mobile gyroscope interaction
+            function handleDeviceMotion(e) {
+                if (e.accelerationIncludingGravity) {
+                    const x = (e.accelerationIncludingGravity.x || 0) * 2;
+                    const y = (e.accelerationIncludingGravity.y || 0) * 2;
+                    
+                    mousePosition.x = Math.max(-20, Math.min(20, x));
+                    mousePosition.y = Math.max(-20, Math.min(20, y));
+                    
+                    updateLayers();
+                }
+            }
+
+            // Update layer transformations
+            function updateLayers() {
+                const bgLayer = holographicEagle.querySelector('.holographic-bg');
+                const layer2 = holographicEagle.querySelector('.eagle-layer-2');
+                const layer1 = holographicEagle.querySelector('.eagle-layer-1');
+                const effect = holographicEagle.querySelector('.holographic-effect');
+
+                if (bgLayer) {
+                    bgLayer.style.transform = `perspective(1000px) rotateX(${mousePosition.y * 0.5}deg) rotateY(${mousePosition.x * 0.5}deg) scale(${isHovered ? 1.1 : 1})`;
+                }
+                
+                if (layer2) {
+                    layer2.style.transform = `perspective(1000px) rotateX(${mousePosition.y * 0.8}deg) rotateY(${mousePosition.x * 0.8}deg) translateZ(10px)`;
+                }
+                
+                if (layer1) {
+                    layer1.style.transform = `perspective(1000px) rotateX(${mousePosition.y}deg) rotateY(${mousePosition.x}deg) translateZ(20px)`;
+                }
+                
+                if (effect) {
+                    effect.style.transform = `perspective(1000px) rotateX(${mousePosition.y * 1.2}deg) rotateY(${mousePosition.x * 1.2}deg) translateZ(30px)`;
+                }
+            }
+
+            // Event listeners
+            holographicEagle.addEventListener('mouseenter', function() {
+                isHovered = true;
+                updateLayers();
+            });
+
+            holographicEagle.addEventListener('mouseleave', function() {
+                isHovered = false;
+                mousePosition = { x: 0, y: 0 };
+                updateLayers();
+            });
+
+            // Mouse movement for desktop
+            document.addEventListener('mousemove', handleMouseMove);
+
+            // Device motion for mobile
+            if (typeof DeviceMotionEvent !== 'undefined') {
+                // Request permission for iOS 13+
+                if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                    holographicEagle.addEventListener('click', function() {
+                        DeviceMotionEvent.requestPermission()
+                            .then(function(response) {
+                                if (response === 'granted') {
+                                    window.addEventListener('devicemotion', handleDeviceMotion);
+                                }
+                            })
+                            .catch(function(error) {
+                                console.log('Device motion permission denied:', error);
+                            });
+                    });
+                } else {
+                    // Non-iOS devices
+                    window.addEventListener('devicemotion', handleDeviceMotion);
+                }
+            }
+
+            // Initialize
+            updateLayers();
+        });
     </script>
     
 </body>
