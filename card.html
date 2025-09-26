@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
     <title>mObywatel</title>
     <meta charset="UTF-8">
@@ -35,7 +35,7 @@
             margin-top: 6px;
         }
 
-        .box_value, .box_value1 {
+        .box_value, .box_value1{
             font-size: 1rem;
             font-weight: 500;
             color: #1f2125;
@@ -92,17 +92,17 @@
             padding-bottom: 0px;
         }
 
-        .confirm_box {
+        .confirm_box{
             margin-bottom: 20px;
             margin-top: 20px;
         }
 
-        .other_grid {
+        .other_grid{
             padding-top: auto;
         }
 
-        /* Holographic Effect Styles */
-        .holographic-container {
+        /* Clean Holographic Eagle Effect - No Colorful Backgrounds */
+        .holographic-eagle-container {
             position: relative;
             width: 60px;
             height: 60px;
@@ -111,6 +111,12 @@
             cursor: pointer;
             border-radius: 8px;
             overflow: hidden;
+            background: transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .holographic-eagle-container:hover {
+            transform: scale(1.05);
         }
 
         .holographic-layer {
@@ -119,31 +125,52 @@
             left: 0;
             width: 100%;
             height: 100%;
-            transition: transform 0.2s;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center center;
+            backface-visibility: hidden;
         }
 
-        .holographic-bg {
-            background-image: url('assets/my-holographic-bg.png');
-            background-size: cover;
+        .eagle-base {
+            background: url('/placeholder.svg?height=60&width=60') no-repeat center;
+            background-size: contain;
             z-index: 1;
-            opacity: 0.6;
+            opacity: 0.3;
+            filter: blur(1px);
         }
 
-        .eagle-layer-2 {
-            background-image: url('assets/my-eagle-layer-2.png');
+        .eagle-main {
+            background: url('/placeholder.svg?height=60&width=60') no-repeat center;
             background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
             z-index: 2;
-            opacity: 0.7;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
         }
 
-        .eagle-layer-1 {
-            background-image: url('assets/my-eagle-layer-1.png');
+        .eagle-highlight {
+            background: url('/placeholder.svg?height=60&width=60') no-repeat center;
             background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
             z-index: 3;
+            opacity: 0.6;
+            filter: brightness(1.2) contrast(1.1);
+        }
+
+        .holographic-shine {
+            background: linear-gradient(45deg, 
+                transparent 30%, 
+                rgba(255, 255, 255, 0.1) 50%, 
+                transparent 70%);
+            z-index: 4;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .holographic-eagle-container:hover .holographic-shine {
+            opacity: 1;
+            animation: shine-sweep 2s ease-in-out infinite;
+        }
+
+        @keyframes shine-sweep {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
         }
     </style>
 </head>
@@ -187,11 +214,15 @@
         <div class="inset"></div>
         <div class="id_own_image" style="background-image: url('https://i.imgur.com/7vHo48p.jpg');"></div>
         <img draggable="false" src="images/gzot1Pt.gif" class="flag_video">
-        <div class="holographic-container eagle_video" id="holographic">
-            <div class="holographic-layer holographic-bg"></div>
-            <div class="holographic-layer eagle-layer-2"></div>
-            <div class="holographic-layer eagle-layer-1"></div>
+        
+         Clean Holographic Eagle Effect - replacing R5yccCK.gif 
+        <div class="holographic-eagle-container eagle_video" id="holographicEagle">
+            <div class="holographic-layer eagle-base"></div>
+            <div class="holographic-layer eagle-main"></div>
+            <div class="holographic-layer eagle-highlight"></div>
+            <div class="holographic-layer holographic-shine"></div>
         </div>
+        
         <p class="eagle_text">Rzeczpospolita<br>Polska</p>
         <div class="id_data_grid">
             <div class="data_holder">
@@ -216,6 +247,7 @@
             </div>
         </div>
     </div>
+    
     <div class="id_bottom">
         <div class="bottom_grid">
             <img class="bottom_image" src="images/7S4kQGf.png">
@@ -324,47 +356,114 @@
     <script src="assets/manifest.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const holographicContainer = document.getElementById('holographic');
-            if (!holographicContainer) {
-                console.error('Holographic container not found!');
-                return;
-            }
-
-            let mousePosition = { x: 0, y: 0 };
+        // Clean Holographic Gyroscope Effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const holographicEagle = document.getElementById('holographicEagle');
+            if (!holographicEagle) return;
+            
+            const layers = holographicEagle.querySelectorAll('.holographic-layer');
+            let devicePosition = { x: 0, y: 0 };
             let isHovered = false;
 
+            // Mobile gyroscope interaction - main functionality
+            function handleDeviceMotion(e) {
+                if (e.accelerationIncludingGravity) {
+                    // Get device acceleration values
+                    const x = (e.accelerationIncludingGravity.x || 0) * 3;
+                    const y = (e.accelerationIncludingGravity.y || 0) * 3;
+                    
+                    // Limit the range for smooth movement
+                    devicePosition.x = Math.max(-25, Math.min(25, x));
+                    devicePosition.y = Math.max(-25, Math.min(25, y));
+                    
+                    updateLayers();
+                }
+            }
+
+            // Desktop mouse interaction (fallback)
             function handleMouseMove(e) {
-                const rect = holographicContainer.getBoundingClientRect();
+                const rect = holographicEagle.getBoundingClientRect();
                 const centerX = rect.left + rect.width / 2;
                 const centerY = rect.top + rect.height / 2;
-                mousePosition.x = (e.clientX - centerX) / rect.width * 20;
-                mousePosition.y = (e.clientY - centerY) / rect.height * 20;
+                
+                const deltaX = (e.clientX - centerX) / rect.width;
+                const deltaY = (e.clientY - centerY) / rect.height;
+                
+                devicePosition.x = deltaX * 15;
+                devicePosition.y = deltaY * 15;
+                
                 updateLayers();
             }
 
+            // Update layer transformations based on device movement
             function updateLayers() {
-                const bgLayer = holographicContainer.querySelector('.holographic-bg');
-                const layer2 = holographicContainer.querySelector('.eagle-layer-2');
-                const layer1 = holographicContainer.querySelector('.eagle-layer-1');
+                const baseLayer = holographicEagle.querySelector('.eagle-base');
+                const mainLayer = holographicEagle.querySelector('.eagle-main');
+                const highlightLayer = holographicEagle.querySelector('.eagle-highlight');
+                const shineLayer = holographicEagle.querySelector('.holographic-shine');
 
-                if (bgLayer) bgLayer.style.transform = `perspective(1000px) rotateX(${mousePosition.y * 0.5}deg) rotateY(${mousePosition.x * 0.5}deg)`;
-                if (layer2) layer2.style.transform = `perspective(1000px) rotateX(${mousePosition.y * 0.8}deg) rotateY(${mousePosition.x * 0.8}deg) translateZ(10px)`;
-                if (layer1) layer1.style.transform = `perspective(1000px) rotateX(${mousePosition.y}deg) rotateY(${mousePosition.x}deg) translateZ(20px)`;
+                if (baseLayer) {
+                    baseLayer.style.transform = `perspective(1000px) rotateX(${devicePosition.y * 0.3}deg) rotateY(${devicePosition.x * 0.3}deg)`;
+                }
+                
+                if (mainLayer) {
+                    mainLayer.style.transform = `perspective(1000px) rotateX(${devicePosition.y * 0.6}deg) rotateY(${devicePosition.x * 0.6}deg) translateZ(5px)`;
+                }
+                
+                if (highlightLayer) {
+                    highlightLayer.style.transform = `perspective(1000px) rotateX(${devicePosition.y * 0.9}deg) rotateY(${devicePosition.x * 0.9}deg) translateZ(10px)`;
+                }
+                
+                if (shineLayer) {
+                    shineLayer.style.transform = `perspective(1000px) rotateX(${devicePosition.y * 1.2}deg) rotateY(${devicePosition.x * 1.2}deg) translateZ(15px)`;
+                }
             }
 
-            holographicContainer.addEventListener('mouseenter', () => {
+            // Event listeners for hover effects
+            holographicEagle.addEventListener('mouseenter', function() {
                 isHovered = true;
-                updateLayers();
             });
 
-            holographicContainer.addEventListener('mouseleave', () => {
+            holographicEagle.addEventListener('mouseleave', function() {
                 isHovered = false;
-                mousePosition = { x: 0, y: 0 };
-                updateLayers();
+                if (window.DeviceMotionEvent === undefined) {
+                    // Reset position only if no gyroscope available
+                    devicePosition = { x: 0, y: 0 };
+                    updateLayers();
+                }
             });
 
-            document.addEventListener('mousemove', handleMouseMove);
+            // Setup gyroscope for mobile devices
+            if (typeof DeviceMotionEvent !== 'undefined') {
+                // Request permission for iOS 13+
+                if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                    holographicEagle.addEventListener('click', function() {
+                        DeviceMotionEvent.requestPermission()
+                            .then(function(response) {
+                                if (response === 'granted') {
+                                    window.addEventListener('devicemotion', handleDeviceMotion);
+                                    console.log('[v0] Gyroscope permission granted');
+                                }
+                            })
+                            .catch(function(error) {
+                                console.log('[v0] Gyroscope permission denied:', error);
+                                // Fallback to mouse movement
+                                document.addEventListener('mousemove', handleMouseMove);
+                            });
+                    });
+                } else {
+                    // Non-iOS devices - direct access
+                    window.addEventListener('devicemotion', handleDeviceMotion);
+                    console.log('[v0] Gyroscope enabled for Android device');
+                }
+            } else {
+                // No gyroscope support - use mouse movement
+                document.addEventListener('mousemove', handleMouseMove);
+                console.log('[v0] No gyroscope support - using mouse movement');
+            }
+
+            // Initialize layers
+            updateLayers();
         });
     </script>
 </body>
